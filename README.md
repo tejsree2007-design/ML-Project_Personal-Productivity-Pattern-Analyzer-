@@ -1,63 +1,90 @@
-Personal Productivity Pattern Analyzer
+# Personal Productivity Pattern Analyzer
 
-About the Project
-
-The Personal Productivity Pattern Analyzer is a web-based application designed to analyze students' daily activities and understand how their routines relate to productivity.
+## About the Project
+The **Personal Productivity Pattern Analyzer** is a web-based application designed to analyze students' daily activities and understand how their routines relate to productivity.
 
 It uses factors such as study hours, sleep duration, phone usage, social media usage, exercise, and academic activities to predict productivity scores and explore behavioral patterns.
 
-Objectives
+## Objectives
+- Analyze daily activity data and identify factors associated with productivity.
+- Predict productivity scores and categorize productivity levels.
+- Discover similar behavioral patterns among students.
+- Identify unusual activity patterns.
+- Provide a user-friendly dashboard for tracking productivity and personal progress.
 
-Analyze daily activity data and identify factors associated with productivity.
+## Key Features
+- **Productivity Analysis:** View a predicted productivity score and level.
+- **Daily Check-in:** Record daily activity information.
+- **Behavior Patterns:** Explore similarities in activity routines.
+- **Unusual Activity Detection:** Flag records that differ from common patterns.
+- **Productivity History:** Review previous check-ins.
+- **Goals and Insights:** Track personal goals and review routine-related insights.
 
-Predict productivity scores and categorize productivity levels.
+## Technologies Used
+- **Programming Language:** Python
+- **Data Processing:** Pandas, NumPy
+- **Data Analysis and Modeling:** Scikit-learn
+- **Data Visualization:** Matplotlib, Seaborn
+- **Backend:** FastAPI, Uvicorn
+- **Frontend:** HTML, CSS, JavaScript
+- **Development Tools:** Visual Studio Code, Git, GitHub
 
-Discover similar behavioral patterns among students.
+## Project Workflow
+1. Load and inspect the student activity dataset.
+2. Clean and preprocess the data.
+3. Train and compare models for productivity-score prediction.
+4. Explore behavioral groups and detect unusual records.
+5. Connect the analysis to a web interface through an API.
+6. Display predictions and activity insights through the dashboard.
 
-Identify unusual activity patterns.
+## Dataset
+The project uses structured student activity data containing lifestyle, study, and academic variables. The training dataset includes the target variable `productivity_score`, while the test dataset is used for prediction-related tasks.
 
-Provide a user-friendly dashboard for tracking productivity and personal progress.
+## Running the Project
 
-Key Features
+### 1. Clone the repository
+```bash
+git clone https://github.com/tejsree2007-design/ML-Project_Personal-Productivity-Pattern-Analyzer-.git
+cd ML-Project_Personal-Productivity-Pattern-Analyzer-
+```
 
-Productivity Analysis: View a predicted productivity score and level.
+### 2. Create and activate a virtual environment
+```bash
+python -m venv .venv
+```
 
-Daily Check-in: Record daily activity information.
+On Windows PowerShell:
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
 
-Behavior Patterns: Explore similarities in activity routines.
+### 3. Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-Unusual Activity Detection: Flag records that differ from common patterns.
+### 4. Start the application
+Run the following command from the project root:
+```bash
+python -m uvicorn api.main:app --reload
+```
 
-Productivity History: Review previous check-ins.
+### 5. Open the application
+Visit:
+- Application: http://127.0.0.1:8000/
+- API documentation: http://127.0.0.1:8000/docs
+- Health check: http://127.0.0.1:8000/health
 
-Goals and Insights: Track personal goals and review routine-related insights.
+**Note:** Train the models using the project's training script before starting the application if the required model files are not already present.
 
-Technologies Used
+## Expected Outcome
+A web-based productivity analysis prototype that combines daily activity tracking, productivity-score prediction, behavioral pattern exploration, and personal progress monitoring.
 
-Programming Language: Python
+## Future Enhancements
+- Database-backed storage and secure user authentication.
+- Improved personalized recommendations.
+- Long-term productivity trends and weekly reports.
+- Deployment for access across devices.
 
-Data Processing: Pandas, NumPy
-
-Data Analysis and Modeling: Scikit-learn
-
-Data Visualization: Matplotlib, Seaborn
-
-Backend: FastAPI, Uvicorn
-
-Frontend: HTML, CSS, JavaScript
-
-Development Tools: Visual Studio Code, Git, GitHub
-
-Project Workflow
-
-Load and inspect the student activity dataset.
-
-Clean and preprocess the data.
-
-Train and compare models for productivity-score prediction.
-
-Explore behavioral groups and detect unusual records.
-
-Connect the analysis to a web interface through an API.
-
-Display predictions and activity insights through the dashboard.
+## Project Team
+Developed as a student project under the Computer Science and Engineering program.

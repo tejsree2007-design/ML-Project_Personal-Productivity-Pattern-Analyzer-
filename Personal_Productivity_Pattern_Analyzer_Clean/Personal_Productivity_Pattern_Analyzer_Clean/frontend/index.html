@@ -1,0 +1,3373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dayform | Personal Productivity</title>
+
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --ink: #172033;
+      --muted: #718096;
+      --line: #e5e9f2;
+      --accent: #4169e1;
+      --accent-dark: #3158c7;
+      --nav: #14243d;
+      --nav-hover: #263e63;
+      --green: #2f855a;
+      --yellow: #b7791f;
+      --red: #c53030;
+      --soft: #edf2ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ================= SIDEBAR ================= */
+
+    aside {
+      width: 245px;
+      background: var(--nav);
+      color: white;
+      padding: 28px 17px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 28px;
+      padding-left: 9px;
+    }
+
+    .brand span {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      opacity: .65;
+      margin-top: 5px;
+    }
+
+    .nav-title {
+      font-size: 10px;
+      letter-spacing: 1.3px;
+      color: #8090aa;
+      padding: 15px 13px 7px;
+      text-transform: uppercase;
+    }
+
+    nav button {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #cbd5e7;
+      text-align: left;
+      padding: 11px 13px;
+      border-radius: 10px;
+      margin: 2px 0;
+      cursor: pointer;
+      font-size: 14px;
+      transition: .2s;
+    }
+
+    nav button:hover,
+    nav button.active {
+      background: var(--nav-hover);
+      color: #fff;
+    }
+
+    .side-note {
+      margin-top: 25px;
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: 13px;
+      padding: 14px;
+      color: #b9c7dc;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .profile-mini {
+      margin-top: 22px;
+      border-top: 1px solid rgba(255, 255, 255, .12);
+      padding: 14px 8px 0;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #3b5275;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .mini-name {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .mini-sub {
+      font-size: 11px;
+      color: #9fb0c8;
+    }
+
+    /* ================= MAIN ================= */
+
+    main {
+      margin-left: 245px;
+      flex: 1;
+      padding: 34px;
+      max-width: 1500px;
+      width: 100%;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 34px;
+      letter-spacing: -1px;
+    }
+
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ================= CARDS ================= */
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 8px 28px rgba(25, 35, 60, .05);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .hero {
+      grid-column: span 2;
+      background: linear-gradient(135deg, #25467e, #4777c7);
+      color: white;
+      min-height: 235px;
+    }
+
+    .hero .label {
+      color: #d8e3fb;
+    }
+
+    .score {
+      font-size: 58px;
+      font-weight: 800;
+      margin: 17px 0 3px;
+    }
+
+    .label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .value {
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .wide {
+      grid-column: span 4;
+    }
+
+    /* ================= BUTTONS ================= */
+
+    .btn {
+      margin-top: 16px;
+      padding: 11px 17px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--accent);
+      color: white;
+      font-weight: 750;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn.secondary {
+      background: #edf2ff;
+      color: var(--accent);
+    }
+
+    .btn.danger {
+      background: #fff0f0;
+      color: var(--red);
+    }
+
+    /* ================= FORMS ================= */
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 17px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .field input,
+    .field select,
+    .goal-input {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      outline: none;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .goal-input:focus {
+      border-color: var(--accent);
+    }
+
+    .checkin-note {
+      background: #f8faff;
+      border: 1px solid #dfe7fb;
+      border-radius: 13px;
+      padding: 14px;
+      margin-bottom: 18px;
+      color: #5d6d88;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* ================= RESULT ================= */
+
+    .result {
+      margin-top: 18px;
+      padding: 20px;
+      border-radius: 14px;
+      background: #f0f4ff;
+      display: none;
+    }
+
+    .result-score {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    /* ================= HISTORY ================= */
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      text-align: left;
+      padding: 13px 9px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    td {
+      padding: 15px 9px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      margin-left: 7px;
+    }
+
+    .badge.high {
+      background: #e8f5ed;
+      color: #247348;
+    }
+
+    .badge.medium {
+      background: #fff5dc;
+      color: #9a6700;
+    }
+
+    .badge.low {
+      background: #ffe9e9;
+      color: #b42323;
+    }
+
+    /* ================= GOALS ================= */
+
+    .goal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .progress {
+      height: 10px;
+      background: #e8edf5;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 10px;
+      width: 0;
+      transition: .4s;
+    }
+
+    /* ================= INSIGHTS ================= */
+
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .insight {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+    }
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      margin-bottom: 13px;
+    }
+
+    /* ================= PATTERNS ================= */
+
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .pattern {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 20px;
+      background: #fff;
+    }
+
+    .pattern.selected {
+      border: 2px solid var(--accent);
+      background: #f8faff;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 5px 9px;
+      background: var(--soft);
+      color: var(--accent);
+      border-radius: 20px;
+      font-weight: 800;
+    }
+
+    /* ================= METRICS ================= */
+
+    .metric-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    .metric:last-child {
+      border-bottom: 0;
+    }
+
+    /* ================= CHART ================= */
+
+    .chart {
+      height: 240px;
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      padding: 20px 8px 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bar-box {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .bar {
+      width: 45px;
+      max-width: 80%;
+      min-height: 4px;
+      background: var(--accent);
+      border-radius: 7px 7px 0 0;
+    }
+
+    .bar-score {
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .bar-date {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 7px;
+    }
+
+    /* ================= NOTICES ================= */
+
+    .notice {
+      padding: 15px;
+      border-radius: 13px;
+      background: #f8faff;
+      border: 1px solid #dfe7fb;
+      color: #5c6d88;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .notice.warn {
+      background: #fffaf0;
+      border-color: #f1dfb3;
+      color: #765919;
+    }
+
+    .notice.good {
+      background: #f1faf5;
+      border-color: #cdebd8;
+      color: #286744;
+    }
+
+    /* ================= PROFILE ================= */
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .avatar-big {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #dfe8ff;
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      padding: 17px;
+      border-radius: 13px;
+      background: #f8faff;
+      border: 1px solid var(--line);
+    }
+
+    .stat b {
+      font-size: 22px;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 45px 20px;
+      color: var(--muted);
+    }
+
+    .empty strong {
+      display: block;
+      color: var(--ink);
+      font-size: 17px;
+      margin-bottom: 7px;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: #8a96a8;
+      font-size: 11px;
+      margin: 25px 0 5px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media(max-width:1050px) {
+
+      aside {
+        width: 210px;
+      }
+
+      main {
+        margin-left: 210px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .wide {
+        grid-column: span 2;
+      }
+
+      .insight-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+    }
+
+    @media(max-width:720px) {
+
+      aside {
+        position: relative;
+        width: 100%;
+        height: auto;
+      }
+
+      .app {
+        display: block;
+      }
+
+      main {
+        margin-left: 0;
+        padding: 20px;
+      }
+
+      .profile-mini {
+        position: static;
+      }
+
+      .grid,
+      .form-grid,
+      .goal-grid,
+      .pattern-grid,
+      .insight-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero,
+      .wide {
+        grid-column: span 1;
+      }
+
+      header {
+        display: block;
+      }
+
+      .top-actions {
+        margin-top: 14px;
+      }
+
+      h1 {
+        font-size: 28px;
+      }
+
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app">
+
+    <!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+    <aside>
+
+      <div class="brand">
+        DAYFORM
+        <span>PERSONAL PRODUCTIVITY</span>
+      </div>
+
+      <div class="nav-title">
+        Workspace
+      </div>
+
+      <nav>
+
+        <button class="active" onclick="showPage('overview',this)">
+          Overview
+        </button>
+
+        <button onclick="showPage('checkin',this)">
+          Daily Check-in
+        </button>
+
+        <button onclick="showPage('history',this)">
+          History
+        </button>
+
+        <button onclick="showPage('goals',this)">
+          Goals
+        </button>
+
+        <button onclick="showPage('insights',this)">
+          Insights
+        </button>
+
+        <button onclick="showPage('patterns',this)">
+          Behavior Patterns
+        </button>
+
+        <button onclick="showPage('unusual',this)">
+          Unusual Activity
+        </button>
+
+      </nav>
+
+      <div class="nav-title">
+        Personal
+      </div>
+
+      <nav>
+
+        <button onclick="showPage('profile',this)">
+          Profile & Settings
+        </button>
+
+      </nav>
+
+      <div class="side-note">
+
+        <b>Your information stays yours</b>
+
+        <br>
+
+        Check-ins, goals and profile settings are stored
+        in this browser on this device.
+
+      </div>
+
+      <div class="profile-mini">
+
+        <div class="avatar" id="sideAvatar">
+          S
+        </div>
+
+        <div>
+
+          <div class="mini-name" id="sideName">
+            Sahasra
+          </div>
+
+          <div class="mini-sub">
+            Personal settings
+          </div>
+
+        </div>
+
+      </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+     MAIN
+===================================================== -->
+
+    <main>
+
+
+      <!-- =====================================================
+     OVERVIEW
+===================================================== -->
+
+      <section id="overview">
+
+        <header>
+
+          <div>
+
+            <h1>
+              Overview
+            </h1>
+
+            <div class="sub">
+              A simple view of your routine, progress and recent results.
+            </div>
+
+          </div>
+
+          <div class="top-actions">
+
+            <span class="pill" id="todayPill"></span>
+
+            <button class="btn" onclick="openCheckin()">
+              + New check-in
+            </button>
+
+          </div>
+
+        </header>
+
+
+        <div class="grid">
+
+
+          <div class="card hero">
+
+            <div class="label">
+              Latest result
+            </div>
+
+            <div class="score" id="heroScore">
+              —
+            </div>
+
+            <div id="heroLevel">
+              Record a check-in to see your result.
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="label">
+              Average productivity
+            </div>
+
+            <div class="value" id="avg">
+              —
+            </div>
+
+            <div class="small">
+              Across recorded check-ins
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <div class="label">
+              Recorded days
+            </div>
+
+            <div class="value" id="days">
+              0
+            </div>
+
+            <div class="small">
+              Saved on this device
+            </div>
+
+          </div>
+
+
+          <div class="card wide">
+
+            <h3>
+              Start with today's check-in
+            </h3>
+
+            <p class="sub">
+              Record a few parts of your day and get a productivity
+              result in seconds. You can review changes over time.
+            </p>
+
+            <button class="btn" onclick="openCheckin()">
+              Record today
+            </button>
+
+          </div>
+
+
+          <div class="card wide">
+
+            <h3>
+              Productivity trend
+            </h3>
+
+            <p class="sub">
+              Your seven most recent recorded results.
+            </p>
+
+            <div id="overviewChart">
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+     DAILY CHECK-IN
+===================================================== -->
+
+      <section id="checkin" style="display:none">
+
+        <header>
+
+          <div>
+
+            <h1>
+              Daily Check-in
+            </h1>
+
+            <div class="sub">
+              Record what your day actually looked like.
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <div class="card">
+
+
+          <div class="checkin-note">
+
+            <b>Quick and practical:</b>
+
+            Enter the main activities from today.
+            The result is a general productivity estimate based
+            on the project data and should be used for routine
+            awareness, not as a health assessment.
+
+          </div>
+
+
+          <div class="form-grid">
+
+
+            <div class="field">
+
+              <label>
+                Study hours
+              </label>
+
+              <input id="study_hours_per_day" type="number" step="0.1" min="0" max="24" value="5">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Sleep hours
+              </label>
+
+              <input id="sleep_hours" type="number" step="0.1" min="0" max="24" value="7">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Phone usage hours
+              </label>
+
+              <input id="phone_usage_hours" type="number" step="0.1" min="0" max="24" value="3">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Social media hours
+              </label>
+
+              <input id="social_media_hours" type="number" step="0.1" min="0" max="24" value="1">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                YouTube hours
+              </label>
+
+              <input id="youtube_hours" type="number" step="0.1" min="0" max="24" value="1">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Gaming hours
+              </label>
+
+              <input id="gaming_hours" type="number" step="0.1" min="0" max="24" value="0.5">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Exercise minutes
+              </label>
+
+              <input id="exercise_minutes" type="number" step="1" min="0" value="30">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Breaks per day
+              </label>
+
+              <input id="breaks_per_day" type="number" step="1" min="0" value="5">
+
+            </div>
+
+
+          </div>
+
+
+          <button class="btn" onclick="predict()">
+
+            Analyze day
+
+          </button>
+
+
+          <div class="result" id="result">
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+     HISTORY
+===================================================== -->
+
+      <section id="history" style="display:none">
+
+        <header>
+
+          <div>
+
+            <h1>
+              History
+            </h1>
+
+            <div class="sub">
+              Look back at your recorded days and notice what is changing.
+            </div>
+
+          </div>
+
+          <button class="btn" onclick="openCheckin()">
+            + New check-in
+          </button>
+
+        </header>
+
+
+        <div class="card">
+
+          <div class="table-wrap" id="historyContainer">
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+     GOALS
+===================================================== -->
+
+      <section id="goals" style="display:none">
+
+        <header>
+
+          <div>
+
+            <h1>
+              Goals
+            </h1>
+
+            <div class="sub">
+              Set simple targets for your routine and track your progress.
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <div class="goal-grid">
+
+
+          <div class="card">
+
+            <h3>
+              Productivity target
+            </h3>
+
+            <p class="sub">
+              Choose the score you want to reach.
+            </p>
+
+            <input class="goal-input" id="productivityGoal" type="number" min="1" max="100" value="70">
+
+            <button class="btn" onclick="saveGoals()">
+              Save goal
+            </button>
+
+            <div class="progress">
+
+              <div class="progress-bar" id="productivityProgress">
+              </div>
+
+            </div>
+
+            <div class="small" id="productivityGoalText">
+              No goal saved yet.
+            </div>
+
+          </div>
+
+
+          <div class="card">
+
+            <h3>
+              Daily study target
+            </h3>
+
+            <p class="sub">
+              Set the number of study hours you want to complete.
+            </p>
+
+            <input class="goal-input" id="studyGoal" type="number" min="0" max="24" step="0.5" value="6">
+
+            <button class="btn" onclick="saveGoals()">
+              Save goal
+            </button>
+
+            <div class="progress">
+
+              <div class="progress-bar" id="studyProgress">
+              </div>
+
+            </div>
+
+            <div class="small" id="studyGoalText">
+              No goal saved yet.
+            </div>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="card" style="margin-top:18px">
+
+          <h3>
+            Your current progress
+          </h3>
+
+          <p class="sub" id="goalSummary">
+            Complete a few check-ins to see your progress here.
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+     INSIGHTS
+===================================================== -->
+
+      <section id="insights" style="display:none">
+
+        <header>
+
+          <div>
+
+            <h1>
+              Insights
+            </h1>
+
+            <div class="sub">
+              Understand what your recorded routine is showing.
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <div class="insight-grid" id="insightCards">
+        </div>
+
+
+        <div class="card" style="margin-top:18px">
+
+          <h3>
+            Productivity trend
+          </h3>
+
+          <p class="sub">
+            Your recent recorded scores.
+          </p>
+
+          <div id="insightChart">
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+     BEHAVIOR PATTERNS
+===================================================== -->
+
+      <section id="patterns" style="display:none">
+
+        <header>
+
+          <div>
+
+            <h1>
+              Behavior Patterns
+            </h1>
+
+            <div class="sub">
+              See which type of daily routine your latest check-in most closely resembles.
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <div id="patternContent">
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+     UNUSUAL ACTIVITY
+===================================================== -->
+
+      <section id="unusual" style="display:none">
+
+        <header>
+
+          <div>
+
+            <h1>
+              Unusual Activity
+            </h1>
+
+            <div class="sub">
+              See whether your latest day looks noticeably different from your recent routine.
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <div id="unusualContent">
+        </div>
+
+      </section>
+
+
+      <!-- =====================================================
+     PROFILE
+===================================================== -->
+
+      <section id="profile" style="display:none">
+
+        <header>
+
+          <div>
+
+            <h1>
+              Profile & Settings
+            </h1>
+
+            <div class="sub">
+              Keep your personal details and preferences in one place.
+            </div>
+
+          </div>
+
+        </header>
+
+
+        <div class="card">
+
+
+          <div class="profile-head">
+
+            <div class="avatar-big" id="bigAvatar">
+              S
+            </div>
+
+            <div>
+
+              <h2 id="profileDisplayName">
+                Sahasra
+              </h2>
+
+              <div class="sub">
+                Personal productivity profile
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-grid" style="margin-top:24px">
+
+
+            <div class="field">
+
+              <label>
+                Your name
+              </label>
+
+              <input id="profileName" type="text" placeholder="Enter your name">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Email
+              </label>
+
+              <input id="profileEmail" type="email" placeholder="Enter your email">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Daily study target
+              </label>
+
+              <input id="profileStudyTarget" type="number" min="0" max="24" step="0.5">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>
+                Preferred start of day
+              </label>
+
+              <select id="profileDay">
+
+                <option>
+                  Morning
+                </option>
+
+                <option>
+                  Afternoon
+                </option>
+
+                <option>
+                  Evening
+                </option>
+
+              </select>
+
+            </div>
+
+
+          </div>
+
+
+          <button class="btn" onclick="saveProfile()">
+            Save profile
+          </button>
+
+
+          <button class="btn secondary" onclick="resetLocalData()">
+            Reset saved app data
+          </button>
+
+
+          <div class="notice" style="margin-top:18px">
+
+            Profile, goals and check-in history are stored locally
+            in this browser. This is a project demo and is not
+            a secure account system.
+
+          </div>
+
+        </div>
+
+
+        <div class="stat-row">
+
+
+          <div class="stat">
+
+            <span class="small">
+              Check-ins
+            </span>
+
+            <b id="profileDays">
+              0
+            </b>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span class="small">
+              Average result
+            </span>
+
+            <b id="profileAvg">
+              —
+            </b>
+
+          </div>
+
+
+          <div class="stat">
+
+            <span class="small">
+              Latest level
+            </span>
+
+            <b id="profileLevel">
+              —
+            </b>
+
+          </div>
+
+
+        </div>
+
+      </section>
+
+
+      <div class="footer-note">
+
+        Dayform provides general routine insights and is not a health assessment.
+
+      </div>
+
+
+    </main>
+
+  </div>
+
+
+  <script>
+
+    /* =========================================================
+       STORAGE
+    ========================================================= */
+
+    const HISTORY_KEY = "dayform_history";
+
+    const GOALS_KEY = "dayform_goals";
+
+    const PROFILE_KEY = "dayform_profile";
+
+
+    function getHistory() {
+
+      try {
+
+        return JSON.parse(
+          localStorage.getItem(HISTORY_KEY)
+        ) || [];
+
+      } catch (error) {
+
+        return [];
+
+      }
+
+    }
+
+
+    function saveHistory(history) {
+
+      localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(history)
+      );
+
+    }
+
+
+    function getGoals() {
+
+      try {
+
+        return JSON.parse(
+          localStorage.getItem(GOALS_KEY)
+        ) || null;
+
+      } catch (error) {
+
+        return null;
+
+      }
+
+    }
+
+
+    function getProfile() {
+
+      try {
+
+        return JSON.parse(
+          localStorage.getItem(PROFILE_KEY)
+        ) || {
+          name: "Sahasra",
+          email: "",
+          studyTarget: 6,
+          day: "Morning"
+        };
+
+      } catch (error) {
+
+        return {
+          name: "Sahasra",
+          email: "",
+          studyTarget: 6,
+          day: "Morning"
+        };
+
+      }
+
+    }
+
+
+    /* =========================================================
+       NAVIGATION
+    ========================================================= */
+
+    function showPage(id, btn) {
+
+      document
+        .querySelectorAll("main > section")
+        .forEach(section => {
+
+          section.style.display = "none";
+
+        });
+
+
+      document
+        .getElementById(id)
+        .style.display = "block";
+
+
+      document
+        .querySelectorAll("nav button")
+        .forEach(button => {
+
+          button.classList.remove("active");
+
+        });
+
+
+      if (btn) {
+
+        btn.classList.add("active");
+
+      }
+
+
+      refreshAll();
+
+    }
+
+
+    function openCheckin() {
+
+      const buttons =
+        document.querySelectorAll("nav button");
+
+      showPage(
+        "checkin",
+        buttons[1]
+      );
+
+    }
+
+
+    /* =========================================================
+       HELPERS
+    ========================================================= */
+
+    function levelFromScore(score) {
+
+      if (score < 40) {
+        return "Low";
+      }
+
+      if (score < 70) {
+        return "Medium";
+      }
+
+      return "High";
+
+    }
+
+
+    function initials(name) {
+
+      return (name || "S")
+        .trim()
+        .split(/\s+/)
+        .map(x => x[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+
+    }
+
+
+    function escapeHtml(value) {
+
+      return String(value)
+        .replace(/[&<>"']/g, character => {
+
+          return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+          }[character];
+
+        });
+
+    }
+
+
+    /* =========================================================
+       CHECK-IN DATA
+    ========================================================= */
+
+    function readCheckin() {
+
+      const ids = [
+
+        "study_hours_per_day",
+        "sleep_hours",
+        "phone_usage_hours",
+        "social_media_hours",
+        "youtube_hours",
+        "gaming_hours",
+        "exercise_minutes",
+        "breaks_per_day"
+
+      ];
+
+
+      const data = {};
+
+
+      ids.forEach(id => {
+
+        data[id] =
+          Number(
+            document
+              .getElementById(id)
+              .value || 0
+          );
+
+      });
+
+
+      return data;
+
+    }
+
+
+    /* =========================================================
+       PREDICTION
+    ========================================================= */
+
+    async function predict() {
+
+      const body =
+        readCheckin();
+
+
+      const result =
+        document.getElementById("result");
+
+
+      result.style.display =
+        "block";
+
+
+      result.innerHTML =
+        "Analyzing your day...";
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/predict",
+            {
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:
+                JSON.stringify(body)
+            }
+          );
+
+
+        if (!response.ok) {
+
+          throw new Error(
+            "Server returned " +
+            response.status
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        if (data.error) {
+
+          throw new Error(
+            data.error
+          );
+
+        }
+
+
+        const score =
+          Number(
+            data.productivity_score
+          );
+
+
+        const level =
+          data.productivity_level ||
+          levelFromScore(score);
+
+
+        const history =
+          getHistory();
+
+
+        const entry = {
+
+          date:
+            new Date()
+              .toISOString(),
+
+          score: score,
+
+          level: level,
+
+          study:
+            body.study_hours_per_day,
+
+          sleep:
+            body.sleep_hours,
+
+          phone:
+            body.phone_usage_hours,
+
+          social:
+            body.social_media_hours,
+
+          youtube:
+            body.youtube_hours,
+
+          gaming:
+            body.gaming_hours,
+
+          exercise:
+            body.exercise_minutes,
+
+          breaks:
+            body.breaks_per_day
+
+        };
+
+
+        history.unshift(entry);
+
+
+        saveHistory(history);
+
+
+        result.innerHTML = `
+
+            <div class="result-score">
+                ${score.toFixed(2)} / 100
+            </div>
+
+            <div>
+                <b>
+                    ${escapeHtml(level)}
+                    productivity
+                </b>
+            </div>
+
+            <p class="sub">
+                Your result has been saved to history.
+            </p>
+
+        `;
+
+
+        refreshAll();
+
+
+      } catch (error) {
+
+        result.innerHTML = `
+
+            <b>
+                Unable to analyze this check-in.
+            </b>
+
+            <p>
+                ${escapeHtml(error.message)}
+            </p>
+
+            <p class="small">
+                Make sure the FastAPI server is running.
+            </p>
+
+        `;
+
+      }
+
+    }
+
+
+    /* =========================================================
+       OVERVIEW
+    ========================================================= */
+
+    function updateOverview() {
+
+      const history =
+        getHistory();
+
+
+      document
+        .getElementById("days")
+        .textContent =
+        history.length;
+
+
+      if (history.length === 0) {
+
+        document
+          .getElementById("avg")
+          .textContent = "—";
+
+        document
+          .getElementById("heroScore")
+          .textContent = "—";
+
+        document
+          .getElementById("heroLevel")
+          .textContent =
+          "Record a check-in to see your result.";
+
+        return;
+
+      }
+
+
+      const average =
+        history.reduce(
+          (sum, item) =>
+            sum + Number(item.score),
+          0
+        ) / history.length;
+
+
+      const latest =
+        history[0];
+
+
+      document
+        .getElementById("avg")
+        .textContent =
+        average.toFixed(1);
+
+
+      document
+        .getElementById("heroScore")
+        .textContent =
+        Number(latest.score)
+          .toFixed(2);
+
+
+      document
+        .getElementById("heroLevel")
+        .textContent =
+        latest.level +
+        " productivity";
+
+    }
+
+
+    /* =========================================================
+       HISTORY
+    ========================================================= */
+
+    function renderHistory() {
+
+      const container =
+        document.getElementById(
+          "historyContainer"
+        );
+
+
+      const history =
+        getHistory();
+
+
+      if (history.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <strong>
+                    No check-ins yet
+                </strong>
+
+                Record your first day to start
+                building your history.
+
+                <br>
+
+                <button
+                    class="btn"
+                    onclick="openCheckin()">
+
+                    Record first day
+
+                </button>
+
+            </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      let html = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Date</th>
+
+                    <th>Productivity</th>
+
+                    <th>Study</th>
+
+                    <th>Sleep</th>
+
+                    <th>Phone Use</th>
+
+                    <th>Social</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+    `;
+
+
+      history.forEach(item => {
+
+        const date =
+          new Date(item.date);
+
+
+        const formatted =
+          date.toLocaleDateString(
+            "en-US",
+            {
+              month: "short",
+              day: "numeric",
+              year: "numeric"
+            }
+          );
+
+
+        const level =
+          item.level ||
+          levelFromScore(item.score);
+
+
+        html += `
+
+            <tr>
+
+                <td>
+                    ${formatted}
+                </td>
+
+                <td>
+
+                    <strong>
+                        ${Number(item.score).toFixed(2)}
+                    </strong>
+
+                    <span
+                        class="badge ${level.toLowerCase()}">
+
+                        ${escapeHtml(level)}
+
+                    </span>
+
+                </td>
+
+                <td>
+                    ${item.study} h
+                </td>
+
+                <td>
+                    ${item.sleep} h
+                </td>
+
+                <td>
+                    ${item.phone} h
+                </td>
+
+                <td>
+                    ${item.social} h
+                </td>
+
+            </tr>
+
+        `;
+
+      });
+
+
+      html += `
+
+            </tbody>
+
+        </table>
+
+        <p class="small">
+
+            ${history.length}
+            check-in${history.length === 1 ? "" : "s"}
+            recorded on this device.
+
+        </p>
+
+    `;
+
+
+      container.innerHTML =
+        html;
+
+    }
+
+
+    /* =========================================================
+       TREND CHART
+    ========================================================= */
+
+    function renderChart(elementId) {
+
+      const container =
+        document.getElementById(
+          elementId
+        );
+
+
+      if (!container) {
+        return;
+      }
+
+
+      const history =
+        getHistory()
+          .slice(0, 7)
+          .reverse();
+
+
+      if (history.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="empty">
+                Your trend will appear after your
+                first check-in.
+            </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      let html =
+        '<div class="chart">';
+
+
+      history.forEach(item => {
+
+        const score =
+          Math.max(
+            4,
+            Math.min(
+              100,
+              Number(item.score)
+            )
+          );
+
+
+        const date =
+          new Date(item.date)
+            .toLocaleDateString(
+              "en-US",
+              {
+                month: "short",
+                day: "numeric"
+              }
+            );
+
+
+        html += `
+
+            <div class="bar-box">
+
+                <div class="bar-score">
+                    ${Number(item.score).toFixed(0)}
+                </div>
+
+                <div
+                    class="bar"
+                    style="height:${score}%">
+
+                </div>
+
+                <div class="bar-date">
+                    ${date}
+                </div>
+
+            </div>
+
+        `;
+
+      });
+
+
+      html +=
+        "</div>";
+
+
+      container.innerHTML =
+        html;
+
+    }
+
+
+    /* =========================================================
+       GOALS
+    ========================================================= */
+
+    function saveGoals() {
+
+      const productivity =
+        Number(
+          document
+            .getElementById(
+              "productivityGoal"
+            )
+            .value
+        );
+
+
+      const study =
+        Number(
+          document
+            .getElementById(
+              "studyGoal"
+            )
+            .value
+        );
+
+
+      localStorage.setItem(
+
+        GOALS_KEY,
+
+        JSON.stringify({
+          productivity: productivity,
+          study: study
+        })
+
+      );
+
+
+      updateGoals();
+
+    }
+
+
+    function updateGoals() {
+
+      let goals =
+        getGoals();
+
+
+      if (!goals) {
+
+        goals = {
+
+          productivity: 70,
+
+          study: 6
+
+        };
+
+        localStorage.setItem(
+          GOALS_KEY,
+          JSON.stringify(goals)
+        );
+
+      }
+
+
+      document
+        .getElementById(
+          "productivityGoal"
+        )
+        .value =
+        goals.productivity;
+
+
+      document
+        .getElementById(
+          "studyGoal"
+        )
+        .value =
+        goals.study;
+
+
+      const history =
+        getHistory();
+
+
+      if (history.length === 0) {
+
+        document
+          .getElementById(
+            "productivityGoalText"
+          )
+          .textContent =
+          "Target: " +
+          goals.productivity +
+          "/100";
+
+
+        document
+          .getElementById(
+            "studyGoalText"
+          )
+          .textContent =
+          "Daily target: " +
+          goals.study +
+          " hours";
+
+        return;
+
+      }
+
+
+      const latest =
+        history[0];
+
+
+      const productivityProgress =
+        Math.min(
+          100,
+          latest.score /
+          goals.productivity *
+          100
+        );
+
+
+      const studyProgress =
+        Math.min(
+          100,
+          latest.study /
+          goals.study *
+          100
+        );
+
+
+      document
+        .getElementById(
+          "productivityProgress"
+        )
+        .style.width =
+        productivityProgress +
+        "%";
+
+
+      document
+        .getElementById(
+          "studyProgress"
+        )
+        .style.width =
+        studyProgress +
+        "%";
+
+
+      document
+        .getElementById(
+          "productivityGoalText"
+        )
+        .textContent =
+        "Latest: " +
+        Number(latest.score).toFixed(1) +
+        " / Target: " +
+        goals.productivity;
+
+
+      document
+        .getElementById(
+          "studyGoalText"
+        )
+        .textContent =
+        "Latest: " +
+        latest.study +
+        " h / Target: " +
+        goals.study +
+        " h";
+
+
+      document
+        .getElementById(
+          "goalSummary"
+        )
+        .textContent =
+        "Your latest day reached " +
+        productivityProgress.toFixed(0) +
+        "% of your productivity target and " +
+        studyProgress.toFixed(0) +
+        "% of your study target.";
+
+    }
+
+
+    /* =========================================================
+       INSIGHTS
+    ========================================================= */
+
+    function renderInsights() {
+
+      const container =
+        document.getElementById(
+          "insightCards"
+        );
+
+
+      const history =
+        getHistory();
+
+
+      if (history.length === 0) {
+
+        container.innerHTML = `
+
+            <div
+                class="card"
+                style="grid-column:1/-1">
+
+                <div class="empty">
+
+                    <strong>
+                        Your insights will appear here
+                    </strong>
+
+                    Complete a few check-ins
+                    to discover patterns in your routine.
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      const latest =
+        history[0];
+
+
+      const average =
+        history.reduce(
+          (sum, item) =>
+            sum + Number(item.score),
+          0
+        ) / history.length;
+
+
+      const cards = [
+
+        [
+          "S",
+          "Study routine",
+          latest.study >= 6
+            ? "You recorded a strong study block today at " +
+            latest.study +
+            " hours."
+            : "You recorded " +
+            latest.study +
+            " study hours today."
+        ],
+
+        [
+          "R",
+          "Rest",
+          "Your latest sleep duration was " +
+          latest.sleep +
+          " hours."
+        ],
+
+        [
+          "P",
+          "Screen time",
+          latest.phone >= 5
+            ? "Phone use was relatively high at " +
+            latest.phone +
+            " hours today."
+            : "Phone use was " +
+            latest.phone +
+            " hours today."
+        ],
+
+        [
+          "A",
+          "Average result",
+          "Your average recorded productivity is " +
+          average.toFixed(1) +
+          " across " +
+          history.length +
+          " check-in" +
+          (history.length === 1 ? "" : "s") +
+          "."
+        ],
+
+        [
+          "L",
+          "Latest result",
+          "Your latest result is " +
+          Number(latest.score).toFixed(1) +
+          " (" +
+          escapeHtml(latest.level) +
+          ")."
+        ],
+
+        [
+          "K",
+          "Keep recording",
+          "Continue recording days to make your personal trend easier to understand."
+        ]
+
+      ];
+
+
+      container.innerHTML =
+        cards.map(card => `
+
+            <div class="insight">
+
+                <div class="icon">
+                    ${card[0]}
+                </div>
+
+                <h3>
+                    ${card[1]}
+                </h3>
+
+                <p class="sub">
+                    ${card[2]}
+                </p>
+
+            </div>
+
+        `).join("");
+
+    }
+
+
+    /* =========================================================
+       BEHAVIOR PATTERNS
+    ========================================================= */
+
+    function renderPatterns() {
+
+      const container =
+        document.getElementById(
+          "patternContent"
+        );
+
+
+      const history =
+        getHistory();
+
+
+      if (history.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="card">
+
+                <div class="empty">
+
+                    <strong>
+                        No pattern yet
+                    </strong>
+
+                    Complete a daily check-in first.
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      const latest =
+        history[0];
+
+
+      const totalScreen =
+        Number(latest.phone) +
+        Number(latest.social) +
+        Number(latest.youtube) +
+        Number(latest.gaming);
+
+
+      const patterns = [
+
+        {
+          name: "Study-focused",
+
+          description:
+            "A routine with strong study time and comparatively controlled entertainment or phone use.",
+
+          active:
+            latest.study >= 6 &&
+            totalScreen <= 8
+
+        },
+
+        {
+          name: "Balanced routine",
+
+          description:
+            "A relatively balanced day across study, rest, activity and screen use.",
+
+          active:
+            latest.study >= 4 &&
+            latest.sleep >= 6 &&
+            latest.sleep <= 9 &&
+            totalScreen <= 10 &&
+            latest.exercise >= 20
+
+        },
+
+        {
+          name: "Screen-heavy",
+
+          description:
+            "A larger share of the day is currently going toward phone, social media, video or gaming.",
+
+          active:
+            totalScreen >= 12 ||
+            latest.phone >= 6
+
+        },
+
+        {
+          name: "Rest-focused",
+
+          description:
+            "Sleep occupies a larger part of the latest day while study time is comparatively lower.",
+
+          active:
+            latest.sleep >= 9 &&
+            latest.study < 5
+
+        }
+
+      ];
+
+
+      let selected =
+        patterns.find(
+          pattern =>
+            pattern.active
+        );
+
+
+      if (!selected) {
+
+        selected = {
+
+          name: "Mixed routine",
+
+          description:
+            "The latest day does not strongly match one of the main routine patterns."
+
+        };
+
+      }
+
+
+      container.innerHTML = `
+
+        <div class="card">
+
+            <span class="tag">
+                Latest check-in
+            </span>
+
+            <h2 style="margin-top:12px">
+
+                ${selected.name}
+
+            </h2>
+
+            <p class="sub">
+
+                ${selected.description}
+
+            </p>
+
+
+            <div class="metric-list">
+
+                <div class="metric">
+
+                    <span>
+                        Study
+                    </span>
+
+                    <b>
+                        ${latest.study} h
+                    </b>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <span>
+                        Sleep
+                    </span>
+
+                    <b>
+                        ${latest.sleep} h
+                    </b>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <span>
+                        Screen-related time
+                    </span>
+
+                    <b>
+                        ${totalScreen.toFixed(1)} h
+                    </b>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <span>
+                        Exercise
+                    </span>
+
+                    <b>
+                        ${latest.exercise} min
+                    </b>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <h3 style="margin-top:24px">
+            Routine types
+        </h3>
+
+
+        <div class="pattern-grid">
+
+            ${patterns.map(pattern => `
+
+                <div class="pattern ${pattern.name === selected.name
+          ? "selected"
+          : ""
+        }">
+
+                    <span class="tag">
+
+                        ${pattern.name === selected.name
+          ? "Current pattern"
+          : "Pattern"
+        }
+
+                    </span>
+
+                    <h3>
+                        ${pattern.name}
+                    </h3>
+
+                    <p class="sub">
+                        ${pattern.description}
+                    </p>
+
+                </div>
+
+            `).join("")}
+
+        </div>
+
+    `;
+
+    }
+
+
+    /* =========================================================
+       UNUSUAL ACTIVITY
+    ========================================================= */
+
+    function renderUnusual() {
+
+      const container =
+        document.getElementById(
+          "unusualContent"
+        );
+
+
+      const history =
+        getHistory();
+
+
+      if (history.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="card">
+
+                <div class="empty">
+
+                    <strong>
+                        No activity comparison yet
+                    </strong>
+
+                    Complete a daily check-in first.
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      if (history.length < 2) {
+
+        container.innerHTML = `
+
+            <div class="notice">
+
+                <b>
+                    Your first day is recorded.
+                </b>
+
+                <br>
+
+                Record a few more days and this page
+                will show which parts of your routine
+                changed noticeably.
+
+            </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      const latest =
+        history[0];
+
+
+      const previous =
+        history.slice(1);
+
+
+      function average(field) {
+
+        return previous.reduce(
+          (sum, item) =>
+            sum +
+            Number(item[field] || 0),
+          0
+        ) / previous.length;
+
+      }
+
+
+      const checks = [
+
+        ["study", "Study hours"],
+
+        ["sleep", "Sleep hours"],
+
+        ["phone", "Phone use"],
+
+        ["social", "Social media"],
+
+        ["youtube", "YouTube"],
+
+        ["gaming", "Gaming"],
+
+        ["exercise", "Exercise minutes"],
+
+        ["breaks", "Breaks per day"]
+
+      ];
+
+
+      const differences =
+        checks.map(item => {
+
+          const field =
+            item[0];
+
+          const averageValue =
+            average(field);
+
+          const currentValue =
+            Number(latest[field] || 0);
+
+          const percentage =
+            averageValue === 0
+              ? 0
+              : Math.abs(
+                currentValue -
+                averageValue
+              ) /
+              averageValue *
+              100;
+
+
+          return {
+
+            field: field,
+
+            label: item[1],
+
+            average: averageValue,
+
+            current: currentValue,
+
+            percentage: percentage
+
+          };
+
+        })
+          .sort(
+            (a, b) =>
+              b.percentage -
+              a.percentage
+          );
+
+
+      const notable =
+        differences
+          .filter(
+            item =>
+              item.percentage >= 35
+          )
+          .slice(0, 4);
+
+
+      if (notable.length === 0) {
+
+        container.innerHTML = `
+
+            <div class="card">
+
+                <div class="notice good">
+
+                    <b>
+                        Your latest day looks fairly consistent.
+                    </b>
+
+                    <br>
+
+                    No major change was detected compared
+                    with your previous recorded days.
+
+                </div>
+
+
+                <div
+                    class="metric-list"
+                    style="margin-top:18px">
+
+                    ${differences
+            .slice(0, 5)
+            .map(item => `
+
+                            <div class="metric">
+
+                                <span>
+                                    ${item.label}
+                                </span>
+
+                                <b>
+
+                                    ${item.current}
+                                    vs
+                                    ${item.average.toFixed(1)}
+                                    usual
+
+                                </b>
+
+                            </div>
+
+                        `)
+            .join("")}
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+      }
+
+
+      container.innerHTML = `
+
+        <div class="card">
+
+            <div class="notice warn">
+
+                <b>
+                    A few parts of today stand out.
+                </b>
+
+                <br>
+
+                These are comparisons with your own
+                recorded routine, not a medical or
+                diagnostic assessment.
+
+            </div>
+
+
+            <div
+                class="metric-list"
+                style="margin-top:18px">
+
+                ${notable
+          .map(item => `
+
+                        <div class="metric">
+
+                            <span>
+                                ${item.label}
+                            </span>
+
+                            <b>
+
+                                ${item.current}
+                                vs
+                                ${item.average.toFixed(1)}
+                                usual
+
+                            </b>
+
+                        </div>
+
+                    `)
+          .join("")}
+
+            </div>
+
+        </div>
+
+    `;
+
+    }
+
+
+    /* =========================================================
+       PROFILE
+    ========================================================= */
+
+    function saveProfile() {
+
+      const profile = {
+
+        name:
+          document
+            .getElementById(
+              "profileName"
+            )
+            .value
+            .trim() ||
+          "Sahasra",
+
+        email:
+          document
+            .getElementById(
+              "profileEmail"
+            )
+            .value
+            .trim(),
+
+        studyTarget:
+          Number(
+            document
+              .getElementById(
+                "profileStudyTarget"
+              )
+              .value ||
+            6
+          ),
+
+        day:
+          document
+            .getElementById(
+              "profileDay"
+            )
+            .value
+
+      };
+
+
+      localStorage.setItem(
+
+        PROFILE_KEY,
+
+        JSON.stringify(profile)
+
+      );
+
+
+      document
+        .getElementById(
+          "studyGoal"
+        )
+        .value =
+        profile.studyTarget;
+
+
+      saveGoals();
+
+
+      refreshAll();
+
+    }
+
+
+    function updateProfile() {
+
+      const profile =
+        getProfile();
+
+
+      document
+        .getElementById(
+          "profileName"
+        )
+        .value =
+        profile.name;
+
+
+      document
+        .getElementById(
+          "profileEmail"
+        )
+        .value =
+        profile.email;
+
+
+      document
+        .getElementById(
+          "profileStudyTarget"
+        )
+        .value =
+        profile.studyTarget;
+
+
+      document
+        .getElementById(
+          "profileDay"
+        )
+        .value =
+        profile.day;
+
+
+      document
+        .getElementById(
+          "profileDisplayName"
+        )
+        .textContent =
+        profile.name;
+
+
+      document
+        .getElementById(
+          "sideName"
+        )
+        .textContent =
+        profile.name;
+
+
+      const initialsValue =
+        initials(profile.name);
+
+
+      document
+        .getElementById(
+          "sideAvatar"
+        )
+        .textContent =
+        initialsValue;
+
+
+      document
+        .getElementById(
+          "bigAvatar"
+        )
+        .textContent =
+        initialsValue;
+
+
+      const history =
+        getHistory();
+
+
+      const average =
+        history.length
+          ? history.reduce(
+            (sum, item) =>
+              sum + Number(item.score),
+            0
+          ) / history.length
+          : 0;
+
+
+      document
+        .getElementById(
+          "profileDays"
+        )
+        .textContent =
+        history.length;
+
+
+      document
+        .getElementById(
+          "profileAvg"
+        )
+        .textContent =
+        history.length
+          ? average.toFixed(1)
+          : "—";
+
+
+      document
+        .getElementById(
+          "profileLevel"
+        )
+        .textContent =
+        history.length
+          ? history[0].level
+          : "—";
+
+    }
+
+
+    /* =========================================================
+       RESET
+    ========================================================= */
+
+    function resetLocalData() {
+
+      if (
+        confirm(
+          "Reset check-ins, goals and profile data on this browser?"
+        )
+      ) {
+
+        localStorage.removeItem(
+          HISTORY_KEY
+        );
+
+        localStorage.removeItem(
+          GOALS_KEY
+        );
+
+        localStorage.removeItem(
+          PROFILE_KEY
+        );
+
+        location.reload();
+
+      }
+
+    }
+
+
+    /* =========================================================
+       REFRESH EVERYTHING
+    ========================================================= */
+
+    function refreshAll() {
+
+      document
+        .getElementById(
+          "todayPill"
+        )
+        .textContent =
+        new Date()
+          .toLocaleDateString(
+            "en-US",
+            {
+              weekday: "long",
+              month: "short",
+              day: "numeric"
+            }
+          );
+
+
+      updateOverview();
+
+      renderHistory();
+
+      updateGoals();
+
+      renderInsights();
+
+      renderChart(
+        "overviewChart"
+      );
+
+      renderChart(
+        "insightChart"
+      );
+
+      renderPatterns();
+
+      renderUnusual();
+
+      updateProfile();
+
+    }
+
+
+    /* =========================================================
+       START
+    ========================================================= */
+
+    refreshAll();
+
+  </script>
+
+</body>
+
+</html>
